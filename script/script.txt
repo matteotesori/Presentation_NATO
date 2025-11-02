@@ -1,0 +1,622 @@
+---------------------------------------------[SLIDE01]------------------------------------------------
+Good morning, everyone. My name is Matteo Tesori, and I have been a PhD student under the supervision 
+of Professor Luigi Chisci and Professor Giorgio Battistelli.
+Over the past three years, I have conducted research on Bayesian methods for Extended Object 
+Tracking — a field that plays a crucial role in applications such as autonomous navigation and radar-
+based surveillance.
+Today, I will walk you through the fundamental challenges in this domain and explain why these methods
+are particularly relevant in modern tracking systems.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE02]------------------------------------------------
+Here is the outline of my presentation.
+I'll begin with an introduction, where I’ll define the problem I’ve addressed, review the state of the
+art, and explain why my research matters.
+
+The core of the presentation is divided into three parts:
+- First, I’ll tackle trajectory prediction for maneuvering objects.
+- Next, I’ll introduce an elliptical approximation to estimate object extensions.
+- Then, I’ll bring these elements together, extending them into a unified algorithm for tracking                   
+  objects with arbitrarily complex shapes.
+
+I’ll conclude with a summary of the main findings and a look ahead at promising directions for future
+work.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE03]------------------------------------------------
+Let me begin with the introduction, where I will first define the problem that this research addresses
+and set the stage for the rest of the presentation.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE04]------------------------------------------------
+Classical tracking paradigms typically model objects as single points, focusing solely on position 
+estimation. This approach was largely a consequence of the limitations of earlier sensor technologies,
+which often provided only a single detection per object per scan. However, significant advancements in
+sensing technology now enable the capture of multiple data points across an object's surface or 
+contour simultaneously. This richer information, often represented as a point cloud, allows us to move
+beyond simple point tracking and estimate not only the object's position but also its orientation and
+shape  – the core elements of Extended Object Tracking.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE05]------------------------------------------------
+With this motivation in mind, we define the Extended Object Tracking problem as follows:
+At each time step, given a sequence of point clouds, the objective is to estimate — within a Bayesian 
+framework — the state of the object.
+As just pointed out, the state of an extended object includes not only kinematic information like 
+position and orientation, but crucially, also the object's geometric shape. This raises a fundamental
+question: How can we effectively model and estimate the shape of an extended object? 
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE06]------------------------------------------------
+Looking at this slide, we begin exploring the state-of-the-art in shape modeling with the Random 
+Matrix Model. As the image suggests, this model approximates the object's shape using an ellipse. The
+characteristic equation shown here defines this ellipse parametrically. The key parameters involved 
+are the position p, the heading h (which determines the ellipse's orientation via the rotation matrix
+U(h)), and the semi-axes l1 and l2 which dictate the ellipse's size. While this is a simplified 
+representation of potentially complex shapes, the Random Matrix Model is significant because it 
+provides a way to estimate orientation and extent, often through computationally efficient methods 
+based on measurement statistics.
+
+Furthermore, the coordinates s and theta in the characteristic equation uniquely identify a point z 
+relative to the ellipse. Specifically, s acts as a scaling factor: points *on* the elliptical boundary
+correspond to s=1, while values of s between 0 and 1 represent points *within* the ellipse's area. 
+Therefore, this formulation conveniently allows us to represent the entire elliptical region, not just
+its boundary.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE07]------------------------------------------------
+Moving beyond the elliptical approximation of the Random Matrix Model, we have the so-called Random 
+Hypersuperface Model. This approach offers greater flexibility in representing object shapes, as 
+indicated by the more general contour shown in the image[cite: 8]. Instead of fixed semi-axes, the
+shape is defined by a continuous radius function, rho(theta), which describes the distance from the 
+center p to the boundary in each direction theta, relative to the object's heading h. The 
+characteristic equation here shows how a point z is defined using this radius function, scaled by s, 
+and oriented by U(h). While still using position p and heading h as tracking parameters, the shape 
+complexity is now captured entirely within this radius function rho. This allows for modeling a wider
+variety of shapes that are not necessarily elliptical.
+
+However, this model is not completely general, since it is primarily suited for representing star-
+convex shapes – that is, shapes where every point on the boundary is visible or 'in line-of-sight' 
+from the central point p. This limitation arises directly from defining the shape using a single 
+radius function emanating from the center.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE08]------------------------------------------------
+Having reviewed these state-of-the-art models, we can discuss their respective pros and cons, which 
+motivates one aspect of the work presented here. A key difference lies in how measurement data is 
+processed. Filters related to the Random Matrix approach often facilitate methods that use summary 
+statistics of the point cloud – specifically, the sample mean (y-bar) and sample covariance (Y-bar). 
+On the other hand, filters related to the Random Hypersuperface Model process individually each point
+forming the point cloud. 
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE09]------------------------------------------------
+Clearly, using process only the sample mean and covariance is particularly advantageous when dealing 
+with sensors like LiDAR or stereo cameras that produce dense point clouds, as processing these summary
+statistics significantly reduces computational cost compared to processing every single point 
+individually. However, this efficiency comes at the cost of potentially losing detailed shape 
+information contained in the full point cloud. 
+This trade-off highlights a motivation for developing methods that aim to balance representational 
+flexibility (like that offered by the Random Hypersuperface Model) with the computational advantages 
+derived from using efficient statistics. 
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE10]------------------------------------------------
+A second motivation for this research addresses a limitation of the Random Hypersuperface model we 
+discussed earlier – its restriction to star-convex shapes. While estimating truly arbitrary shapes is
+inherently complex, we can observe that in many practical applications, we possess significant prior 
+knowledge about the object shape being tracked. For instance, we might know it's a vehicle or an 
+aircraft, even if the exact model is unknown. This observation leads to the following idea: instead of
+estimating an arbitrary shape, we can reframe the problem as shape classification. The objective then
+becomes selecting the best-fitting shape from a predefined library or family of known shapes,
+potentially using a Maximum A Posteriori approach.
+------------------------------------------------------------------------------------------------------ 
+
+---------------------------------------------[SLIDE11]------------------------------------------------
+The advantage is the ability to estimate complex. The limitation, of course, is that the resulting 
+filter can only recognize shapes present within its library. However, for specific applications like
+autonomous driving or aerial surveillance, where object shapes are tightly constrained, this approach
+can be highly effective. 
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE12]------------------------------------------------
+With the problem defined and the motivations outlined, let's move into the first part of the technical 
+contribution. This section focuses specifically on the challenges and solutions for tracking 
+maneuvering objects.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE13]------------------------------------------------
+So, what do we mean by a 'maneuvering' object in this context? An object is considered to be 
+maneuvering if its speed, denoted by s(t), and its turning rate, denoted by omega(t), vary over time,
+rather than remaining constant. Accurately predicting the trajectory of such objects requires models 
+that can account for these dynamic changes in speed and direction.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE14]------------------------------------------------
+So, we've defined maneuvering objects as those with time-varying speed s(t) and turning rate omega(t).
+Why is it important to explicitly model these dynamics? The first key reason, highlighted here, is
+that incorporating estimates of speed and turning rate, and how they change, allows us to make much 
+more accurate predictions of the object's future position and heading compared to simpler models that
+assume constant velocity or constant turn rate.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE15]------------------------------------------------
+Beyond improving predictions, there's a second crucial reason why modeling these dynamics is 
+particularly relevant in the context of Extended Object Tracking. As point (2) highlights, unlike 
+traditional point tracking, EOT allows us to directly infer or 'observe' the object's heading or 
+orientation from the shape information within the point cloud data. Since we can directly estimate the
+heading h, it becomes especially valuable to also model its rate of change – the turning rate
+omega(t) – to understand and predict maneuvers more accurately.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE16]------------------------------------------------
+Taking these points together, the core idea proposed in this part of the work is to develop a 
+dedicated prediction model designed to explicitly estimate not only the speed and turning rate 
+themselves, but also their higher order derivatives. By incorporating these higher-order dynamics, we
+aim to significantly improve prediction, and so tracking, performance for maneuvering objects.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE17]------------------------------------------------
+To implement the idea of modeling higher-order dynamics, we start by defining the object's kinematics.
+As shown in the figure, the object's state includes its position p(t) and its heading angle h(t) 
+relative to a fixed axis (here, 'east'). The velocity vector v(t) is related to the speed s(t) and 
+heading h(t) through the non-holonomic assumption shown here: the velocity is always aligned with the
+object's heading. Based on this, the motion dynamics are described by two differential equations. The 
+rate of change of position, dot{p}(t), depends on the current speed and heading. The rate of change of
+heading, dot{h}(t), is simply the turning rate omega(t). To capture the maneuvering behavior, we 
+further assume that the higher-order derivatives of speed (up to order Lambda) and turning rate (up to
+order O) are driven by unknown inputs, denoted u_{Lambda}(t) and u_{O}(t) respectively. This forms the
+basis of the new prediction model.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE18]------------------------------------------------
+Based on the dynamics we just introduced, we can now define the complete kinematic state vector,
+denoted by x, that we aim to estimate. As shown on the slide, this state vector $x$ concatenates two 
+parts: the object's position vector p, and a second vector l. This vector l contains the object's 
+heading h, along with the speed s and its derivatives up to order Lambda-1, and the turning rate 
+omega and its derivatives up to order O-1.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE19]------------------------------------------------
+The resulting dynamic model consists of two coupled differential equations. The first equation 
+describes the rate of change of position and is non-linear. The second equation describes the dynamics
+of l(t) and is linear. This structure separates the non-linear position dynamics from the linear 
+dynamics governing the heading, speed, turn rate, and their derivatives.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE20]------------------------------------------------
+The continuous-time model provides a good description of the object's motion, but for practical 
+implementation in a digital system, such as a tracking filter, we need a discrete-time representation.
+To obtain this, we consider the evolution of the state from time t_{k} to the next time step t_{k+1}, 
+separated by the sampling interval T. Assuming the input u is held constant between samples (a Zero-
+Order Hold or ZOH assumption), we arrive at the discrete-time update equations shown here. The update
+for the position p_{k+1} involves integrating the non-linear velocity function f(l(tau)) over the 
+interval T. The update for the vector l_{k+1} is obtained by solving the linear differential equation
+for l, resulting in terms involving the matrix exponential exp(AT) applied to the previous state 
+l_{k}, and an integrated input term acting on u_{k}. 
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE21]------------------------------------------------
+To obtain a practical prediction model, we introduce two key simplifications. First, we approximate
+the non-linear integral using the trapezoidal rule, which relies on the values of the function f 
+evaluated using the states at the beginning and end of the interval, l_{k} and l_{k+1}. Second, 
+instead of assuming known inputs u_{k}, we set the deterministic input to zero and account for 
+unmodeled dynamics and uncertainties by adding zero-mean, white Gaussian process noise, w_{k}, with
+covariance Q. Applying these two steps, yields the final prediction model structure used in this work,
+which we refer to as the Lambda:Omicron model.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE22]------------------------------------------------
+To make the Lambda:Omicron model concrete, this is how look like the specific equations for the case
+where Lambda=2 and O=1. This means our state includes speed s, its first derivative dot{s}, and the 
+turning rate omega. You can see the position update explicitly uses the trapezoidal approximation 
+involving speeds and headings at steps k and k+1. The updates for heading h, speed s, its 
+derivative dot{s}, and turning rate omega follow linear dynamics based on the previous state and the
+time step T, with additive Gaussian noise included in each component.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE23]------------------------------------------------
+Having addressed the prediction model for maneuvering kinematics in Part 1, we now move to Part 2. 
+Here, we'll focus specifically on methods suitable for estimating position, heading and extensions of
+unknown extended objects.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE24]------------------------------------------------
+For tracking elliptical objects, we employ the Multiplicative Error Model, or MEM, shown here as our
+measurement model. This equation relates a single measurement point y to the object's state. It 
+starts with the position p, adds a term representing the elliptical shape – which involves the 
+rotation U(h), scaling by semi-axes l_{1}, l_{2} via matrix D, and a random variable q - the 
+multiplicative error - capturing the point's location relative to the ellipse center – and finally 
+adds measurement noise v. We assume standard Gaussian distributions for both the shape variable q
+and the noise v. In particular, the Gaussian distribution for q represents the moment-matching 
+approximation of a uniform distribution over a circular area of unit radius.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE25]------------------------------------------------
+A key consequence of the Multiplicative Error Model we just defined is that we can derive an 
+analytical expression for the covariance of the measurement y. Crucially, you can see that Sigma 
+explicitly depends on the object's heading h (through the rotation matrices U(h)), the semi-axes l_{1}
+and l_{2}. Hence, Sigma is somewhat correlated to the heading h and the axes semilengths, enabling, in 
+principle, the estimation of these variables in function of Sigma.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE26]------------------------------------------------
+Recalling that the theoretical measurement covariance Sigma depends on heading h and semi-axes l_{1},
+l_{2}, the core idea here is to leverage this relationship for estimation. We calculate the sample 
+covariance matrix overline{Y} from the actual measurement point cloud. Assuming overline{Y} provides
+a reasonable approximation of the vectorized covariance Sigma, we can then work backwards to estimate
+the heading h, semi-length l_{1}, and semi-width l_{2} directly from this sample covariance 
+overline{Y}.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE27]------------------------------------------------
+We combine the Lambda:O kinematic state with the ellipse parameters l_{1}, l_{2} into an augmented 
+state vector x. We then form a pseudo-measurement Y using the sample mean overline{y} and sample
+covariance overline{Y}. 
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE28]------------------------------------------------
+The proposed filter performs the prediction step using an Extended Kalman Predictor based on the 
+Lambda:O model and a constant model for the axes parameters.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE29]------------------------------------------------
+Finally, the correction step is carried out via the BLUE equations based on the pseudo-
+measurement.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE30]------------------------------------------------
+This is the structure of the proposed tracker for elliptical objects, which we call the LO-MEM 
+tracker. It operates cyclically: The input point cloud {Y}_k is preprocessed to obtain the 
+pseudo-measurement {Y}_k. This pseudo-measurement, along with the predicted state from the previous 
+cycle, feeds into the BLUE corrector to compute the updated state estimate x_{k|k}. This updated 
+estimate then goes into the $\Lambda:O$ predictor (using the model discussed in Part 1) to generate 
+the prediction for the next time step, x_{k+1|k}, completing the loop.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE31]------------------------------------------------
+We've covered models for maneuvering objects and elliptical shapes. Now, in Part 3, we address the 
+challenge of tracking objects with arbitrarily complex shapes.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE32]------------------------------------------------
+The approach in this section builds on a key observation: in many practical scenarios, we often have 
+strong prior knowledge about the shape of object being tracked.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE33]------------------------------------------------
+For example, in applications like autonomous driving or surveillance, we might know we are tracking a
+car, a ship, or an aircraft, even if we don't know the specific model or its exact dimensions.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE34]------------------------------------------------
+Leveraging this prior knowledge about potential object shapes, the core idea proposed in this section
+is to reframe the challenge: instead of estimating an arbitrary shape from scratch, we solve shape 
+estimation as a classification problem.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE35]------------------------------------------------
+So, instead of estimating geometric parameters for the shape, the classification approach focuses on
+determining which shape from a predefined library best represents the object. We maintain a 
+probability distribution over this library, which we call the 'shape belief'. This belief, denoted 
+pi_{k|k}(c), represents the posterior probability that the object belongs to shape class c, given data
+up to time k.
+
+This bar chart provides a visual example. The horizontal axis lists the different shape classes in our
+library – in this case, various aircraft models. The vertical axis represents the probability, or our
+degree of belief, assigned to each class. The height of each bar shows the estimated probability for 
+that specific shape. For instance, in this illustrative belief state, the probability is highest for 
+the 'Eurofighter Typhoon' shape, suggesting it's currently the most likely match based on the data
+processed so far.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE36]------------------------------------------------
+To implement this classification approach, we need a way to represent the shapes in our library. We 
+use the Linear Spline Model shown here. In this model, each shape contour is defined by a sequence of 
+connected vertices, as illustrated in the image. The key parameters are the object's position p and
+heading h, along with a shape vector \overline{S} which stores the coordinates of these vertices 
+relative to the object's frame. The equation z(alpha) provides a parametric way to trace the contour 
+based on these vertices, using interpolation defined by the blending matrix B(\alpha).
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE37]------------------------------------------------
+To classify the shape based on the point cloud, we first perform a 'whitening' step. This involves 
+transforming the incoming measurements y from world coordinates into an object-centric frame, using 
+the current estimates of position p and heading h. This normalized point cloud \overline{\mathcal{Y}}
+is then used for classification. Once a shape \overline{S} (defined by its vertices in the object 
+frame) is selected, we perform the inverse 'dewhitening' transformation, using p and h again, to place
+the shape correctly back into the world coordinate system.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE38]------------------------------------------------
+Conceptually, we can think of the system as having two main components, as shown in this diagram. A 
+kinematic 'tracker' estimates the object's position p_{k} and heading h_{k}. This kinematic 
+information, along with the raw measurements {Y}_k, is then used by a 'shaper' module, which performs 
+the shape classification and outputs the estimated shape \hat{S}_k. This estimation strategy is 
+referred to as Track to Shape.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE39]------------------------------------------------
+This diagram details the internal structure of the 'shaper' module. First, the incoming point cloud 
+\mathcal{Y}_k is whitened using the position and heading estimates, yielding the normalized point 
+cloud. We then calculate the likelihood of this whitened cloud for each candidate shape c in our
+library. This likelihood is combined with the predicted shape belief pi_{k|k-1}(c) in a Bayesian 
+corrector step to produce the updated belief pi_{k|k}(c). A predictor step updates this belief for
+the next cycle. Based on the updated belief, an estimator, typically Maximum A Posteriori (MAP), 
+selects the most likely shape class hat{c}. Finally, this selected shape class is dewhitened using the
+position and heading estimates to produce the final shape estimate \hat{S}_k in world coordinates.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE40]------------------------------------------------
+The prediction step for the shape belief uses the Chapman-Kolmogorov equation shown here. This 
+predicts the belief for the current step, pi_{k|k-1}(c), as a weighted average. It combines the 
+previous posterior belief pi_{k-1|k-1}(c) with a uniform distribution u(c), preventing the classifier 
+to ignore the latest data. The forgetting factor lambda controls the mixing, representing the 
+probability of a shape transition.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE41]------------------------------------------------
+Following the prediction, the correction step updates the shape belief using the current measurements
+via Bayes' rule, as shown here. The posterior belief pi_{k|k}(c) for shape class c is calculated by 
+multiplying the likelihood of the whitened measurements \overline{\mathcal{V}}_k given shape c with
+the predicted belief pi_{k|k-1}(c) from the previous step. This product is then normalized by summing
+over all possible shape classes nu in the denominator. This gives us the updated probability
+distribution over the shape library based on the latest data.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE42]------------------------------------------------
+Once we have the updated shape belief pi_{k|k}(c) from the Bayesian corrector, we need to decide on 
+the most likely shape. We typically do this using the Maximum A Posteriori estimator shown here. This
+simply involves selecting the shape class hat{c} that has the highest probability according to our 
+current posterior belief pi_{k|k}(c).
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE43]------------------------------------------------
+So, the shape classifier involves prediction, correction using Bayes' rule, and MAP estimation. 
+However, a crucial component in the Bayes corrector step is the likelihood function, which quantifies
+how likely the whitened measurements are given a specific shape. Defining this likelihood function 
+appropriately is the key problem we address next.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE44]------------------------------------------------
+To define the likelihood function, we first need a measurement model. We assume that each measurement
+y originates from a point overline{z} chosen uniformly at random from the object's surface 
+overline{mathcal{I}}, transformed by the object's position p and heading h, and corrupted by 
+additive Gaussian noise v with covariance R (assumed to be isotropic). For likelihood calculations, we
+work with the whitened measurement \overline{y}, which simply corresponds to the surface point
+\overline{z} plus noise v, effectively assuming the object is centered at the origin with zero 
+heading.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE45]------------------------------------------------
+Based on the surface measurement model, we define the uniform 'Scattering distribution' mathcal{U}(z)
+This represents the probability density function for the random point overline{z} originating from the
+object's surface overline{\mathcal{I}} in the whitened frame. Assuming uniform scattering, this 
+distribution is simply constant over the surface (equal to 1 divided by the surface area) and zero 
+elsewhere.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE46]------------------------------------------------
+Using the scattering distribution mathcal{U}, we can now define the likelihood mathcal{L}_s of
+observing a single whitened measurement overline{y} given a candidate shape overline{S}. As shown by
+the integral, this likelihood is obtained by considering all possible points overline{z} on the
+object surface, calculating the probability of overline{y} originating from each overline{z} (given
+by the Gaussian noise model), and averaging over the surface according to the scattering distribution
+mathcal{U}. Assuming independence between measurements, the likelihood for the entire whitened point
+cloud overline{mathcal{V}} is then simply the product of these individual likelihoods for each
+measurement overline{y}^{(j)} in the cloud.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE47]------------------------------------------------
+Calculating the likelihood integral over an arbitrary surface overline{mathcal{I}} can be 
+computationally challenging. To address this, we represent our shapes using the Linear Spline model, 
+which effectively creates a triangular mesh or decomposition of the surface. This decomposition allows
+us to express the overall scattering distribution mathcal{U} as a mixture model. As shown here, it 
+becomes a weighted sum of the uniform scattering distributions \mathcal{U} over each individual 
+triangle, where the weight $w_i$ for each triangle is simply its area relative to the total surface 
+area.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE48]------------------------------------------------
+Substituting the mixture model for the scattering distribution into our likelihood definition gives 
+this expression for the exact single-point likelihood mathcal{L}_s. We see that the overall 
+likelihood is now a weighted sum, where each term involves integrating the Gaussian noise model 
+against the uniform scattering distribution mathcal{U} over a single triangle, weighted by that 
+triangle's relative area w_i. This breaks down the complex calculation into manageable parts for each
+triangle in the mesh.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE49]------------------------------------------------
+While breaking the likelihood into a sum over triangles helps, evaluating the exact integral for each
+triangle can still be complex. Therefore, we often resort to a Monte Carlo approximation, shown here 
+as mathcal{L}_s^{MC}. Instead of integrating analytically, we draw N_i random points
+overline{z}^{(k)} uniformly from each triangle. We then evaluate the Gaussian probability density
+between the measurement overline{y} and each sample overline{z}^{(k)}, and average these values for
+each triangle. The final Monte Carlo likelihood is the weighted sum of these averages, using the 
+triangle area weights w_i.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE50]------------------------------------------------
+To perform the Monte Carlo calculation mentioned on the previous slide, we need an efficient way to 
+sample points uniformly from each triangle in our mesh. This slide shows the parameterization 
+overline{\kappa}_s(\alpha) we use. By drawing two random variables, alpha_1 and alpha_2, uniformly 
+from the interval [0, 1], this formula generates a point overline{z} uniformly distributed within the
+triangle defined by vertices overline{V}_{1,i}, overline{V}_{2,i}, and overline{V}_{3,i}. This allows
+us to easily generate the samples needed for the Monte Carlo likelihood approximation.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE51]------------------------------------------------
+Consequently, we generate random parameter alpha^{(k)} to get points within each triangle, and then
+evaluate the Gaussian likelihood between the measurement overline{y} and these generated points 
+overline{\kappa}_s(\alpha^{(k)}). Averaging these and summing across triangles gives our final
+likelihood.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE52]------------------------------------------------
+Alternatively, we can consider a measurement model where points originate uniformly from the object's 
+contour, instead of its surface. However, we must be careful here. Mathematically defining a proper 
+uniform probability distribution over a 1D contour within a 2D space is problematic. Therefore, the 
+approach presented on this slide and the following ones for the contour likelihood mathcal{L}_c should
+be viewed as a *heuristic* analogy to the surface case.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE53]------------------------------------------------
+We proceed *as if* we could define a uniform scattering distribution based on contour length, similar 
+to how the Dirac delta is used as a useful, though non-rigorous, function. This heuristic allows us to
+quickly derive a practical likelihood function mathcal{L}_c for measurements assumed to be near the
+contour, based on the whitened model overline{y} = overline{z}+v where overline{z} is now notionally 
+'on the contour'.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE54]------------------------------------------------
+We define the scattering distribution mathcal{U} based on contour length and the likelihood 
+mathcal{L}_c by integrating the noise model against this heuristic distribution. The point-cloud 
+likelihood is again the product of single-point likelihoods.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE55]------------------------------------------------
+Following the same heuristic logic as the surface model, we decompose the contour into line segments 
+from our spline representation. The overall heuristic scattering distribution mathcal{U} is then 
+expressed as a mixture model, a weighted sum of uniform distributions over each segment, where the 
+weights w_i are proportional to segment length.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE56]------------------------------------------------
+Consequently, the single-point likelihood mathcal{L}_c becomes a weighted sum of n integral I_i, 
+where each integral represents the likelihood integral calculated over a single linear segment.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE57]------------------------------------------------
+Focusing on the calculation for a single linear segment, we need to evaluate the integral I_{i}. We 
+parameterize a point along the line segment between its two vertices using overline{kappa}_c(alpha), 
+where alpha goes from 0 to 1.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE58]------------------------------------------------
+Substituting this into the likelihood integral gives the expression for I_{i} shown here, integrating 
+the Gaussian probability density along the line segment.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE59]------------------------------------------------
+Interestingly, the likelihood integral over a single line segment for the contour model *can* be 
+solved analytically. To see how, we start by noting that the Gaussian argument is a linear function of
+alpha.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE60]------------------------------------------------
+Then, by completing the square within the Gaussian exponent yields this particular factorization of 
+the integrand.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE61]------------------------------------------------
+Hence, we move the factors independent from alpha outside the integral.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE62]------------------------------------------------
+Finally, the ending result comes out by expressing the Gaussian integral in terms of the Gaussian 
+cumulative distribution function Phi, evaluated on the measurement overline{y} and the segments 
+endpoints. This provides an exact way to compute the heuristic contour likelihood without resorting to
+Monte Carlo sampling.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE63]------------------------------------------------
+Having detailed the likelihood calculations for the shape classifier, we now move on to demonstrate 
+the performance of the proposed estimator through simulation results.
+I will show a simulation reproducing a fighter jet performing evasive maneuvers, while being tracked
+by a filter considering 21 different aircraft shapes.
+------------------------------------------------------------------------------------------------------
+
+--------------------------------------------[SIMULATION]----------------------------------------------
+In the leftmost tiles is represented the ground truth. In particular, the top tile shows a close-up
+of the tracked object in ego-centric view, while the bottom tile shows the trajectory followed by 
+the object from the sensor perspective.
+The second tiles column shows the point-clouds generated by the two sensors overlapped with the true
+object shape. On the top, is simulated a sensor observing contour points, while on the bottom is 
+simulated a sensor observing surface points.
+The third column of tiles is the most interesting one: it shows the instantaneous likelihood and the
+relative posterior. To be more precise, each tile is split in two parts: the top part shows in red 
+the values of the posterior for each possible class; the bottom part shows in blue the values of the 
+likelihood for each possible class. Note that the true class is highlighted with a white strip.
+Finally, the rightmost column shows the estimates generated by the proposed method. 
+As you can see, the posterior quickly converges to the true class, even though sometimes the 
+likelihood does not get maximum value on the true class. In the end, both in the contour and surface 
+case, the propose method is able to correctly recognize the true object shape, while tracking its
+position and heading.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE64]------------------------------------------------
+This concludes the presentation of the main technical contributions. I will now move to the final 
+section, summarizing the key findings and discussing potential future directions.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE65]------------------------------------------------
+The EOT solution presented incorporates several key aspects.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE66]------------------------------------------------
+It leverages the point cloud for heading information. This allows to almost directly estimate the 
+heading angle from the data and, consequently, to exploit this information to estimate the object 
+turning rate and more. 
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE67]------------------------------------------------
+The proposed solution assumes a time-invariant shape. This allows to separate kinematic estimation and 
+shape estimation, so that a computationally cheap solution to track position and heading can be 
+implemented.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE68]------------------------------------------------
+Finally, the proposed solution takes advantage of the prior information available in many tracking 
+scenarios, so that shape estimation reduces to a much simpler classification problem.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE69]------------------------------------------------
+On the flipside, the proposed solution has some limitations.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE70]------------------------------------------------
+First, the proposed estimator for kinematics requires that the observed data is uniformly distributed 
+over the object surface or contour.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE71]------------------------------------------------
+Second, the likelihood function employed by the classifier is particularly expensive from a 
+computational point of view. 
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE72]------------------------------------------------
+Third, the Track To shape approach does not exploit the information about the object shape to estimate 
+the position and heading.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE73]------------------------------------------------
+Besides these pros and cons, my work can be extended in several directions. The first direction is 
+about the relaxation of the assumption on data uniformly distributed over the over the observed 
+object. This open up to the interesting problem of occlusion-based tracking, where some part of the 
+tracked object is assumed to be not visible.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE74]------------------------------------------------
+A second direction regards a multi-sensor extension in a centralized and distributed fashion. This is 
+particularly relevant to mitigate the occlusion problem.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE75]------------------------------------------------
+Third, it is of interest to combine the proposed solution with multi-object estimators, such as the 
+one provided by the Random Finite Set theory.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE76]------------------------------------------------
+A fourth direction is about agnostic tracking, where, like in the Random Hypersuperface Model, the 
+objective is to estimate the object shape without resorting to a library of known shapes.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE77]------------------------------------------------
+Finally, a 3-dimensional extension is particularly relevant for some applications such as 
+air-surveillance.
+------------------------------------------------------------------------------------------------------
+
+---------------------------------------------[SLIDE78]------------------------------------------------
+This brings me to the end of my presentation. Thank you very much for your time and attention. I am
+now happy to answer any questions you may have.
+------------------------------------------------------------------------------------------------------
