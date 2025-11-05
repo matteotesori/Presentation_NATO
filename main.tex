@@ -76,11 +76,11 @@
 	\noindent\textcolor{orange}{\rule{8cm}{0.4pt}}\\
 	\vspace{0.2cm}
 		\begin{tabular}{@{}ll@{}}
-		  \textbf{Introduction}   & whoami,problem definition, state of the art and motivation \\[0.5em]
+		  \textbf{Introduction}   & whoami, problem definition, state of the art and motivation \\[0.5em]
 		  \textbf{Part 1}  		  & tracking for maneuvering objects                    \\
 		  \textbf{Part 2}  		  & tracking for elliptical objects                     \\
 		  \textbf{Part 3}  		  & tracking for general objects  						\\[0.5em]
-		  \textbf{Conclusions}    & future research directions                           
+		  \textbf{Conclusions}    & summary and future research directions                           
 		\end{tabular}
 \end{frame}
   
@@ -189,7 +189,7 @@ p' & \ell'
 Dynamics discretization
 \begin{equation*}
 	\begin{aligned}
-		\dot p(t) 	 &= f(\ell(t))\\
+		\dot p(t) 	 &= v(\ell(t))\\
 		\dot \ell(t) &= A\ell(t)
 	\end{aligned}
 \qquad \Rightarrow \qquad
@@ -403,8 +403,8 @@ p' & \ell'
 	Prediction equations (random walk for $e$)
 	\begin{equation*}
 		\begin{aligned}
-		x_{k|k-1} &\triangleq \overline{f}_{k-1}\\
-		P_{k|k-1} &\triangleq F_{k-1}+Q\\
+		x_{k|k-1} &\triangleq \overline{f}_{k|k-1}\\
+		P_{k|k-1} &\triangleq F_{k|k-1}+Q\\
 		\end{aligned}
 	\end{equation*}
 	\pause
@@ -451,6 +451,7 @@ However, in some scenarios they are deemed to fail:
 	\item When we have to distinguish objects with similar extensions;
 	\item When we have to deal with \textbf{occlusions}.
 \end{itemize}
+Moreover, ellipses are symmetric: they cannot distinguish bow/front from stern/rear.
 \end{frame}
 
 \begin{frame}{Tracking for general objects}
@@ -495,7 +496,7 @@ Why not using Random Hypersurface Models?
 \begin{equation*}
 	\textsf{RHM regression:}\quad \mathcal{O}(n^3)\end{equation*}
 \item Typically, we use the estimated shape by RHM filters to classify tracked objects.
-\newline Why not directly perform classification?
+\newline Why not perform classification directly over point clouds?
 \end{itemize}
 \end{frame}
 
@@ -551,9 +552,9 @@ and generalizes the elliptic model and the RHM model.
 \vspace{0.5cm}
 \newline
 \pause
-Accordingly, we define the \textit{object shape} as a closed and non self-intersecting 
-polygon contained in the unit square $[-0.5,+0.5]^2$. 
-\newline Such polygon is defined by a \textbf{shape vector} $\widetilde{S}$ stacking the vertex coordinates.
+Accordingly, we define the \textit{object shape} $\widetilde{\mathcal{S}}$ as a closed and non self-intersecting 
+polygon (contour or surface) contained in the unit square $[-0.5,+0.5]^2$. 
+\newline Such polygon is defined by a \textbf{shape vector} $\widetilde{S}$ stacking vertex coordinates.
 \end{frame}
 
 \begin{frame}{Tracking for general objects}
@@ -563,7 +564,7 @@ polygon contained in the unit square $[-0.5,+0.5]^2$.
 \end{frame}
 
 \begin{frame}{Tracking for general objects}
-	Since the shape library $\{\widetilde{S}^{(c)}\}_{c=1}^C$ is defined over the unit square $[-0.5,+0.5]^2$, 
+	Since the shape vectors $\{\widetilde{S}^{(c)}\}_{c=1}^C$ are referred to the unit square $[-0.5,+0.5]^2$, 
 	we need to \textbf{whiten} the measurements before feeding them to the shaper.
 
 	\pause
@@ -611,33 +612,43 @@ for a suitable transition matrix  $\mathcal{T}$.
 \pause
 \newline
 \textbf{Generalized Bayesian correction}
-\begin{equation*}
-\pi_{k|k}^{c} \propto \mathcal{L}_k^{\frac{1}{\tau}}\,\pi_{k|k-1}^{c}
+\begin{equation*}\begin{aligned}
+\pi_{k|k}^{c} &\propto \exp\left(-J_k\right)\,\pi_{k|k-1}^{c} \\
+J_k &\triangleq -\frac{1}{\tau_{\textrm{c}}} \,\log \mathcal{L}_k
+\end{aligned}
 \end{equation*}
-for a suitable temperature parameter $\tau>0$ and a suitable PC2S likelihood matrix $\mathcal{L}$.
+for a suitable \textit{temperature} parameter $\tau_{\textrm{c}}>0$ and a suitable PC2S likelihood matrix $\mathcal{L}$.
 \end{frame}
 
 \begin{frame}{Tracking for general objects}
 \textbf{(1) AC estimator}
 \begin{equation*}
-\pi_{k|k}^{c} = \mathcal{A} \,\pi_{k|k-1}^{c}
+c_{k|k}\triangleq \arg\max_c \frac{1}{1+\eta}\pi_{k|k}^{c}(c|x)+\frac{\eta}{1+\eta} \,\delta_{c_{k-1|k-1}}(c) 
 \end{equation*}
-this estimator smooths out frequent changes in the Maximum A Posteriori (MAP) class estimate.
+where $\eta>0$ is the hysteresis amplitude. 
+\vspace{0.3cm}
+\newline
+This estimator smooths out changes in the Maximum A Posteriori (MAP) estimate:
+\begin{itemize}
+	\item if $\eta\to 0$, we recover the standard MAP estimator (no smoothing);
+	\item if $\eta\to +\infty$, we recover a zero-order hold estimator (no change).
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Tracking for general objects}
 	\textbf{(2) Transition matrix}
 	\begin{equation*}
-	\mathcal{T} \triangleq (1-\lambda)\,\mathcal{S} + \lambda\,\mathcal{R}
+	\mathcal{T} \triangleq (1-\lambda)\,\mathcal{D} + \lambda\,\mathcal{R}
 	\end{equation*}
 	where $\lambda\in(0,1)$ is a forgetting factor and: 
 	\begin{itemize}
-		\item \textbf{similarity matrix}
+		\item \textbf{dissimilarity matrix}
 		\begin{equation*}
-			[\mathcal{S}]_{ij}\triangleq \textrm{sim}\left(\widetilde{S}^{(i)},\widetilde{S}^{(j)}\right) 
+			[\mathcal{D}]_{ij}\propto \exp\left[-\frac{1}{\tau_{\textrm{p}}}\textrm{dissim}\left(\widetilde{S}^{(i)},\widetilde{S}^{(j)}\right) \right]
 		\end{equation*}
+		where $\tau_{\textrm{p}}>0$ is a temperature parameter.\newline
 		This term makes the classifier robust against geometric ambiguities between similar shapes. 
-		Examples of similarity metrics are complementary Hausdorff distance, chamfer distance, earth mover distance, etc...
+		Dissimilarity metrics: Hausdorff, chamfer, earth mover, etc...
 		\item \textbf{regularization matrix}
 		\begin{equation*}
 			[\mathcal{R}]_{ij}\triangleq \frac{1}{C}
@@ -682,6 +693,8 @@ this estimator smooths out frequent changes in the Maximum A Posteriori (MAP) cl
 
 \begin{frame}{Tracking for general objects}
 \textbf{(3) PC2S likelihood}
+\newline
+Assuming $\widetilde{\mathcal{Y}}$ is as an \textbf{Independent and Identically Distributed Cluster (IIDC)} Random Finite Set,
 \begin{equation*}
 \mathcal{L}\left(\widetilde{\mathcal{Y}}\,\big|\,\widetilde{S}^{(c)}\right)\triangleq 
 \mathcal{L}^{\textrm{C}}\left(|\widetilde{\mathcal{Y}}|\,\big|\,\widetilde{S}^{(c)}\right)
@@ -697,202 +710,285 @@ where:
 	\newline
 	It provides a deep analysis of the compatibility between each point in the cloud and the shape under test.
 \end{itemize}
+\end{frame}
 
-\pause
-Accordingly, the pointcloud $\widetilde{\mathcal{Y}}$ is modeled as an \textbf{Independent and Identically Distributed Cluster (IIDC)} Random Finite Set. 
+
+\begin{frame}{Tracking for general objects}
+To define, $\mathcal{L}^{\textrm{C}}\left(|\widetilde{\mathcal{Y}}|\,\big|\,\widetilde{S}^{(c)}\right)$ 
+and $\mathcal{L}^{\textrm{S}}\left(\widetilde{y}\,\big|\widetilde{S}^{(c)}\right)$, we need to introduce:
+\begin{itemize}
+	\item \textbf{shape patch}: the object shape is decomposed into $n$ non-overlapping patches 
+	\begin{equation*}
+	\widetilde{\mathcal{S}}=\bigcup_{i=1}^n \widetilde{\mathcal{S}}_i
+	\end{equation*}
+	If $\widetilde{\mathcal{S}}$ is the polygon contour, $\widetilde{\mathcal{S}}_i$ is the $i$-th polygon edge.
+	\newline
+	If $\widetilde{\mathcal{S}}$ is the polygon surface, $\widetilde{\mathcal{S}}_i$ is the $i$-th polygon triangle.
+	\pause
+	\item \textbf{patch measure}: to each patch $\widetilde{\mathcal{S}}_i$ we associate a measure 
+	\begin{equation*}
+	\mu_i \triangleq \mu\left(\widetilde{\mathcal{S}}_i\right)
+	\end{equation*}
+	If $\widetilde{\mathcal{S}}$ is the polygon contour, $\mu_i$ is the \textbf{length} of the $i$-th polygon edge.
+	\newline
+	If $\widetilde{\mathcal{S}}$ is the polygon surface, $\mu_i$ is the \textbf{area} of the $i$-th polygon triangle.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Tracking for general objects}
-Measurement model (surface)
-\begin{equation*} 
-\begin{aligned}
-	\widetilde y&\triangleq \widetilde{z}+v\\
-	\widetilde{z}&\sim \mathcal{U}(\widetilde{\mathcal{I}})\\
-	v&\sim \mathcal{N}(0,R)
-	\end{aligned}
-\qquad \widetilde{\mathcal{I}}\triangleq \text{object surface}
-\end{equation*}
-\pause
-Single point and point-cloud likelihoods 
-\begin{equation*}
-	\begin{aligned}
-\mathcal{L}_{\text{s}}(\widetilde{y}|\widetilde{S})&\triangleq\int \mathcal{N}(\widetilde{y}-\widetilde{z};0,R)\,\,\mathcal{U}(\widetilde{z};\widetilde{\mathcal{I}})\,\text{ d}\widetilde{z}\\
-\mathcal{L}_{\text{s}}(\widetilde{\mathcal{Y}}|\widetilde{S})&\triangleq\prod_{j=1}^{m}\mathcal{L}_{\text{s}}\left(\widetilde{y}^{(j)}|\widetilde{S}\right)
+TODO picture with shape patches and patch measures
+\end{frame}
+
+\begin{frame}{Tracking for general objects}
+\textbf{Cardinality likelihood}
+\begin{equation*}\begin{aligned}
+\mathcal{L}^{\textrm{C}}\left(|\widetilde{\mathcal{Y}}|\,\big|\,\widetilde{S}^{(c)}\right) &\triangleq
+\textrm{Poisson}\left(|\widetilde{\mathcal{Y}}|;\,\lambda^{(c)}\right)\\
+\lambda^{(c)} &\triangleq \rho\,a^{(c)}\,b^{(c)}\,\sum_{i=1}^{n^{(c)}} \mu_i^{(c)}
 \end{aligned}
 \end{equation*}
-\pause
-Uniform scattering distribution
-\begin{equation*}
-	\mathcal{U}(z;\widetilde{\mathcal{I}})\triangleq 
-	\frac{\mathds{1}_{\widetilde{\mathcal{I}}}(z)}{\int_{\widetilde{\mathcal{I}}}
-	\text{ d}\zeta}=\frac{\mathds{1}_{\widetilde{\mathcal{I}}}(z)}{\textrm{area}(\widetilde{\mathcal{I}})}
+where:
+\begin{itemize}
+	\item $\rho>0$ is the \textbf{sensor resolution} (expected number of points per unit measure);
+	\item $a^{(c)},b^{(c)}$ are the object length and width (from shape library).
+\end{itemize}
+\textbf{IDEA}: "bigger" is the shape, larger is the number of points we expect in the cloud.
+\end{frame}
+
+\begin{frame}{Tracking for general objects}
+\textbf{Spatial likelihood}
+\newline
+assuming that the point cloud is uniformly distributed over the object shape $\mathcal{S}$,
+\begin{equation*}\begin{aligned}
+\mathcal{L}^{\textrm{S}}\left(\widetilde{y}\,\big|\,\widetilde{S}^{(c)}\right) &\triangleq
+\sum_{i=1}^{n^{(c)}} \frac{\mu_i^{(c)}}{\mu^{(c)}} \int_{[0,1]^d} \pi_v\left(\widetilde{y}-\widetilde{\kappa}_i^{(c)}(\beta)\right)\text{ d}\beta\\
+\mu^{(c)} &\triangleq \sum_{i=1}^{n^{(c)}} \mu_i^{(c)}
+\end{aligned}
 \end{equation*}
+where $d=1$ in the contour case, $d=2$ in the surface case, and:
+\begin{itemize}
+	\item $\pi_v(\cdot)$ is the sensor noise density;
+	\item $\widetilde{\kappa}_i^{(c)}(\cdot)$ is the \textbf{patch covering kernel}. 
+\end{itemize}
+\pause
+If $p_v(\cdot)$ is Gaussian, the integral can be computed in closed form in the contour case.
+\newline
+In the surface case, the integral can be computed via numerical techniques (e.g. MC).
 \end{frame}
 
 \begin{frame}{Tracking for general objects}
-	\begin{columns}[c] 
-	  \column{0.45\textwidth}
-	  \includegraphics[width=0.9\linewidth]{Inkscape/surfaceDecomp.pdf}
+TODO kernel pictures
+\end{frame}
+
+\begin{frame}{Tracking for general objects}
+T2S is \textbf{linear} in the shape complexity $n^{(c)}$:
+\begin{equation*}
+\mathcal{L}\left(\widetilde{\mathcal{Y}}\,\big|\,\widetilde{S}^{(c)}\right)=
+\underbrace{\underbrace{\textrm{Poisson}\left(|\widetilde{\mathcal{Y}}|;\,\lambda^{(c)}\right)}_{\mathcal{O}(1)}\,
+\prod_{j=1}^m \sum_{i=1}^{n^{(c)}} \frac{\mu_i^{(c)}}{\mu^{(c)}} \underbrace{\int_{[0,1]^d} p_v\left(\widetilde{y}^{(j)}-\widetilde{\kappa}_i^{(c)}(\beta)\right)\text{ d}\beta}_{\mathcal{O}(N_i^{(c)})}}_{\mathcal{O}(m n^{(c)} \bar{N}^{(c)})}
+\end{equation*}
+\pause
+The overall complexity is $\mathcal{O}(C m \bar{n} \bar{N})$:
+\begin{itemize}
+	\item $C$ is the number of shapes in the shape library;
+	\item $m$ is the number of points in the cloud;
+	\item $\bar{n}$ is the average number of patches across the shape library;
+	\item $\bar{N}$ is the average number of MC particles across the shape library.
+\end{itemize}
+\end{frame}
+
+
+% \begin{frame}{Tracking for general objects}
+% Measurement model (surface)
+% \begin{equation*} 
+% \begin{aligned}
+% 	\widetilde y&\triangleq \widetilde{z}+v\\
+% 	\widetilde{z}&\sim \mathcal{U}(\widetilde{\mathcal{I}})\\
+% 	v&\sim \mathcal{N}(0,R)
+% 	\end{aligned}
+% \qquad \widetilde{\mathcal{I}}\triangleq \text{object surface}
+% \end{equation*}
+% \pause
+% Single point and point-cloud likelihoods 
+% \begin{equation*}
+% 	\begin{aligned}
+% \mathcal{L}_{\text{s}}(\widetilde{y}|\widetilde{S})&\triangleq\int \mathcal{N}(\widetilde{y}-\widetilde{z};0,R)\,\,\mathcal{U}(\widetilde{z};\widetilde{\mathcal{I}})\,\text{ d}\widetilde{z}\\
+% \mathcal{L}_{\text{s}}(\widetilde{\mathcal{Y}}|\widetilde{S})&\triangleq\prod_{j=1}^{m}\mathcal{L}_{\text{s}}\left(\widetilde{y}^{(j)}|\widetilde{S}\right)
+% \end{aligned}
+% \end{equation*}
+% \pause
+% Uniform scattering distribution
+% \begin{equation*}
+% 	\mathcal{U}(z;\widetilde{\mathcal{I}})\triangleq 
+% 	\frac{\mathds{1}_{\widetilde{\mathcal{I}}}(z)}{\int_{\widetilde{\mathcal{I}}}
+% 	\text{ d}\zeta}=\frac{\mathds{1}_{\widetilde{\mathcal{I}}}(z)}{\textrm{area}(\widetilde{\mathcal{I}})}
+% \end{equation*}
+% \end{frame}
+
+% \begin{frame}{Tracking for general objects}
+% 	\begin{columns}[c] 
+% 	  \column{0.45\textwidth}
+% 	  \includegraphics[width=0.9\linewidth]{Inkscape/surfaceDecomp.pdf}
 	  
-	  \column{0.55\textwidth}
-		\small
-		\vspace{0.5em}
-	\pause
-	\phantom{+}\newline
-	  Uniform scattering distribution
-	  \begin{equation*}
-		\mathcal{U}(z;\widetilde{\mathcal{I}})
-		= \frac{\sum_{i=1}^n \mathds{1}_{\widetilde{\mathcal{I}}_i}(z)}{\textrm{area}(\widetilde{\mathcal{I}})}
-		= \sum_{i=1}^n
-		\underbrace{\frac{\textrm{area}(\widetilde{\mathcal{I}}_i)}{\textrm{area}(\widetilde{\mathcal{I}})}}_{\triangleq w_{\text{s},i}} 
-		\underbrace{\frac{\mathds{1}_{\widetilde{\mathcal{I}}_i}(z)}{\textrm{area}(\widetilde{\mathcal{I}}_i)}}_{=\mathcal{U}(z;\widetilde{\mathcal{I}}_i)}
-	  \end{equation*}
-	  	\pause
-		Single point likelihood
-	  	\begin{equation*}
-			\mathcal{L}_{\text{s}}(\widetilde{y}|\widetilde{S})=\sum_{i=1}^n w_{\text{s},i} \underbrace{\int \mathcal{N}(\widetilde{y}-\widetilde{z};0,R)\,\,\mathcal{U}(\widetilde{z};\widetilde{\mathcal{I}}_i)\text{ d}\widetilde{z}}_{\triangleq \mathcal{L}_{\text{s},i}(\widetilde{y};R)}
-		\end{equation*}
+% 	  \column{0.55\textwidth}
+% 		\small
+% 		\vspace{0.5em}
+% 	\pause
+% 	\phantom{+}\newline
+% 	  Uniform scattering distribution
+% 	  \begin{equation*}
+% 		\mathcal{U}(z;\widetilde{\mathcal{I}})
+% 		= \frac{\sum_{i=1}^n \mathds{1}_{\widetilde{\mathcal{I}}_i}(z)}{\textrm{area}(\widetilde{\mathcal{I}})}
+% 		= \sum_{i=1}^n
+% 		\underbrace{\frac{\textrm{area}(\widetilde{\mathcal{I}}_i)}{\textrm{area}(\widetilde{\mathcal{I}})}}_{\triangleq w_{\text{s},i}} 
+% 		\underbrace{\frac{\mathds{1}_{\widetilde{\mathcal{I}}_i}(z)}{\textrm{area}(\widetilde{\mathcal{I}}_i)}}_{=\mathcal{U}(z;\widetilde{\mathcal{I}}_i)}
+% 	  \end{equation*}
+% 	  	\pause
+% 		Single point likelihood
+% 	  	\begin{equation*}
+% 			\mathcal{L}_{\text{s}}(\widetilde{y}|\widetilde{S})=\sum_{i=1}^n w_{\text{s},i} \underbrace{\int \mathcal{N}(\widetilde{y}-\widetilde{z};0,R)\,\,\mathcal{U}(\widetilde{z};\widetilde{\mathcal{I}}_i)\text{ d}\widetilde{z}}_{\triangleq \mathcal{L}_{\text{s},i}(\widetilde{y};R)}
+% 		\end{equation*}
 
-		% \pause
-		% Single point likelihood (Monte Carlo)
-	  	% \begin{equation*}
-		% 	\begin{aligned}
-		% 	\mathcal{L}_{\text{s}}^{\text{MC}}(\widetilde{y}|\widetilde{S})&=\sum_{i=1}^n w_i\left[\frac{1}{N_i}\sum_{k=1}^{N_i} \mathcal{N}(\widetilde{y}-\widetilde{z}^{(k)};0,R)\right]\\
-		% 	\widetilde{z}^{(k)}&\sim \mathcal{U}(\widetilde{\mathcal{I}}_i)
-		% \end{aligned}
-		% \end{equation*}
-	\end{columns}
-	  \end{frame}
+% 		% \pause
+% 		% Single point likelihood (Monte Carlo)
+% 	  	% \begin{equation*}
+% 		% 	\begin{aligned}
+% 		% 	\mathcal{L}_{\text{s}}^{\text{MC}}(\widetilde{y}|\widetilde{S})&=\sum_{i=1}^n w_i\left[\frac{1}{N_i}\sum_{k=1}^{N_i} \mathcal{N}(\widetilde{y}-\widetilde{z}^{(k)};0,R)\right]\\
+% 		% 	\widetilde{z}^{(k)}&\sim \mathcal{U}(\widetilde{\mathcal{I}}_i)
+% 		% \end{aligned}
+% 		% \end{equation*}
+% 	\end{columns}
+% 	  \end{frame}
   
-\begin{frame}{Tracking for general objects}
-	\vspace{0.2cm}
-	\begin{center}
-		\includegraphics[width=0.8\textwidth]{Inkscape/surfaceMap.pdf}
-	\end{center}
-	\pause
-	\vspace{0.4cm}
-	\begin{equation*}
-		\begin{aligned}
-		\mathcal{L}_{\text{s},i}(\widetilde{y};R)&=
-		\int_{[0,1]^2} \mathcal{N}(\widetilde{y}-\widetilde{\kappa}_{\text{s}}(\alpha);0,R)\text{ d}\alpha\\
-		&\approx\frac{1}{N_i}\sum_{k=1}^{N_i} \mathcal{N}\left(\widetilde{y}-\widetilde{\kappa}_{\text{s}}(\alpha^{(k)});0,R\right)
-		\qquad
-		{\alpha}^{(k)}\sim \mathcal{U}([0,1]^2)
-		\end{aligned}
-	\end{equation*}
-\end{frame}  
+% \begin{frame}{Tracking for general objects}
+% 	\vspace{0.2cm}
+% 	\begin{center}
+% 		\includegraphics[width=0.8\textwidth]{Inkscape/surfaceMap.pdf}
+% 	\end{center}
+% 	\pause
+% 	\vspace{0.4cm}
+% 	\begin{equation*}
+% 		\begin{aligned}
+% 		\mathcal{L}_{\text{s},i}(\widetilde{y};R)&=
+% 		\int_{[0,1]^2} \mathcal{N}(\widetilde{y}-\widetilde{\kappa}_{\text{s}}(\alpha);0,R)\text{ d}\alpha\\
+% 		&\approx\frac{1}{N_i}\sum_{k=1}^{N_i} \mathcal{N}\left(\widetilde{y}-\widetilde{\kappa}_{\text{s}}(\alpha^{(k)});0,R\right)
+% 		\qquad
+% 		{\alpha}^{(k)}\sim \mathcal{U}([0,1]^2)
+% 		\end{aligned}
+% 	\end{equation*}
+% \end{frame}  
 
-\begin{frame}{Tracking for general objects}
-	Measurement model (contour)
-	\begin{equation*}
-	\begin{aligned}
-		\widetilde y&\triangleq \widetilde{z}+v\\
-		\widetilde{z}&\sim \mathcal{U}(\partial\widetilde{\mathcal{I}})\\
-		v&\sim \mathcal{N}(0,R)
-		\end{aligned}
-	\qquad \partial\widetilde{\mathcal{I}}\triangleq \text{object contour}
-	\end{equation*}
-	\pause
-	Single point and point-cloud likelihoods 
-	\begin{equation*}
-		\begin{aligned}
-	\mathcal{L}_{\text{c}}(\widetilde{y}|\widetilde{S})&\triangleq\int \mathcal{N}(\widetilde{y}-\widetilde{z};0,R)\,\,\,\mathcal{U}(\widetilde{z};\partial\widetilde{\mathcal{I}})\text{ d}\widetilde{z}\\
-	\mathcal{L}_{\text{c}}(\widetilde{\mathcal{Y}}|\widetilde{S})&\triangleq\prod_{j=1}^{m}\mathcal{L}_{\text{c}}\left(\widetilde{y}^{(j)}|\widetilde{S}\right)
-	\end{aligned}
-	\end{equation*}
-	\pause
-	Uniform scattering distribution
-	\begin{equation*}
-		\mathcal{U}(z;\partial\widetilde{\mathcal{I}})\triangleq 
-		\frac{\mathds{1}_{\partial\widetilde{\mathcal{I}}}(z)}{\int_{\partial\widetilde{\mathcal{I}}}
-		\text{ d}\zeta}\,\,
-		\color{orange}{
-		\triangleq\frac{\mathds{1}_{\partial\widetilde{\mathcal{I}}}(z)}{\textrm{length}(\partial\widetilde{\mathcal{I}})}}
-	\end{equation*}
-	\end{frame}
+% \begin{frame}{Tracking for general objects}
+% 	Measurement model (contour)
+% 	\begin{equation*}
+% 	\begin{aligned}
+% 		\widetilde y&\triangleq \widetilde{z}+v\\
+% 		\widetilde{z}&\sim \mathcal{U}(\partial\widetilde{\mathcal{I}})\\
+% 		v&\sim \mathcal{N}(0,R)
+% 		\end{aligned}
+% 	\qquad \partial\widetilde{\mathcal{I}}\triangleq \text{object contour}
+% 	\end{equation*}
+% 	\pause
+% 	Single point and point-cloud likelihoods 
+% 	\begin{equation*}
+% 		\begin{aligned}
+% 	\mathcal{L}_{\text{c}}(\widetilde{y}|\widetilde{S})&\triangleq\int \mathcal{N}(\widetilde{y}-\widetilde{z};0,R)\,\,\,\mathcal{U}(\widetilde{z};\partial\widetilde{\mathcal{I}})\text{ d}\widetilde{z}\\
+% 	\mathcal{L}_{\text{c}}(\widetilde{\mathcal{Y}}|\widetilde{S})&\triangleq\prod_{j=1}^{m}\mathcal{L}_{\text{c}}\left(\widetilde{y}^{(j)}|\widetilde{S}\right)
+% 	\end{aligned}
+% 	\end{equation*}
+% 	\pause
+% 	Uniform scattering distribution
+% 	\begin{equation*}
+% 		\mathcal{U}(z;\partial\widetilde{\mathcal{I}})\triangleq 
+% 		\frac{\mathds{1}_{\partial\widetilde{\mathcal{I}}}(z)}{\int_{\partial\widetilde{\mathcal{I}}}
+% 		\text{ d}\zeta}\,\,
+% 		\color{orange}{
+% 		\triangleq\frac{\mathds{1}_{\partial\widetilde{\mathcal{I}}}(z)}{\textrm{length}(\partial\widetilde{\mathcal{I}})}}
+% 	\end{equation*}
+% 	\end{frame}
 
-\begin{frame}{Tracking for general objects}
-	\begin{columns}[c] 
-		\column{0.45\textwidth}
-		\includegraphics[width=0.9\linewidth]{Inkscape/contourDecomp.pdf}
+% \begin{frame}{Tracking for general objects}
+% 	\begin{columns}[c] 
+% 		\column{0.45\textwidth}
+% 		\includegraphics[width=0.9\linewidth]{Inkscape/contourDecomp.pdf}
 		
-		\column{0.55\textwidth}
-		\small
-		\vspace{0.5em}
-		\pause
-		\phantom{+}\newline
-		Uniform scattering distribution
-		\begin{equation*}
-		\mathcal{U}(z;\partial\widetilde{\mathcal{I}})
-		= \sum_{i=1}^n
-		\underbrace{\frac{\textrm{length}(\partial\widetilde{\mathcal{I}}_i)}{\textrm{length}(\partial\widetilde{\mathcal{I}})}}_{\triangleq w_{\text{c},i}} 
-		\underbrace{\frac{\mathds{1}_{\widetilde{\partial\mathcal{I}}_i}(z)}{\textrm{length}(\partial\widetilde{\mathcal{I}}_i)}}_{=\mathcal{U}(z;\partial\widetilde{\mathcal{I}}_i)}
-		\end{equation*}
-			\pause
-		Single point likelihood
-			\begin{equation*}
-			\mathcal{L}_{\text{c}}(\widetilde{y}|\widetilde{S})=\sum_{i=1}^n w_{\text{c},i} \underbrace{\int \mathcal{N}(\widetilde{y}-\widetilde{z};0,R)\,\,\mathcal{U}(\widetilde{z};\widetilde{\mathcal{I}}_i)\text{ d}\widetilde{z}}_{\triangleq \mathcal{L}_{\text{c},i}(\widetilde{y}; R)}
-		\end{equation*}
-	\end{columns}
-	\end{frame}
+% 		\column{0.55\textwidth}
+% 		\small
+% 		\vspace{0.5em}
+% 		\pause
+% 		\phantom{+}\newline
+% 		Uniform scattering distribution
+% 		\begin{equation*}
+% 		\mathcal{U}(z;\partial\widetilde{\mathcal{I}})
+% 		= \sum_{i=1}^n
+% 		\underbrace{\frac{\textrm{length}(\partial\widetilde{\mathcal{I}}_i)}{\textrm{length}(\partial\widetilde{\mathcal{I}})}}_{\triangleq w_{\text{c},i}} 
+% 		\underbrace{\frac{\mathds{1}_{\widetilde{\partial\mathcal{I}}_i}(z)}{\textrm{length}(\partial\widetilde{\mathcal{I}}_i)}}_{=\mathcal{U}(z;\partial\widetilde{\mathcal{I}}_i)}
+% 		\end{equation*}
+% 			\pause
+% 		Single point likelihood
+% 			\begin{equation*}
+% 			\mathcal{L}_{\text{c}}(\widetilde{y}|\widetilde{S})=\sum_{i=1}^n w_{\text{c},i} \underbrace{\int \mathcal{N}(\widetilde{y}-\widetilde{z};0,R)\,\,\mathcal{U}(\widetilde{z};\widetilde{\mathcal{I}}_i)\text{ d}\widetilde{z}}_{\triangleq \mathcal{L}_{\text{c},i}(\widetilde{y}; R)}
+% 		\end{equation*}
+% 	\end{columns}
+% 	\end{frame}
 
-	\begin{frame}{Tracking for general objects}
-		\vspace{0.4cm}
-		\begin{center}
-			\includegraphics[width=0.65\textwidth]{Inkscape/contourMap.pdf}
-		\end{center}
-		\pause
-		\vspace{0.4cm}
-		\begin{equation*}
-			\begin{aligned}
-			\mathcal{L}_{\text{c},i}(\widetilde{y};R)
-			&=\int_0^1 \mathcal{N}(\widetilde{y}-\widetilde{\kappa}_{\text{c}}(\alpha);0,R)\text{ d}\alpha\\
-			&=\int_0^1 \mathcal{N}(A_i\alpha+B_i;0,R)\text{ d}\alpha
-			\end{aligned}
-		\end{equation*}
-	\end{frame}  
+% 	\begin{frame}{Tracking for general objects}
+% 		\vspace{0.4cm}
+% 		\begin{center}
+% 			\includegraphics[width=0.65\textwidth]{Inkscape/contourMap.pdf}
+% 		\end{center}
+% 		\pause
+% 		\vspace{0.4cm}
+% 		\begin{equation*}
+% 			\begin{aligned}
+% 			\mathcal{L}_{\text{c},i}(\widetilde{y};R)
+% 			&=\int_0^1 \mathcal{N}(\widetilde{y}-\widetilde{\kappa}_{\text{c}}(\alpha);0,R)\text{ d}\alpha\\
+% 			&=\int_0^1 \mathcal{N}(A_i\alpha+B_i;0,R)\text{ d}\alpha
+% 			\end{aligned}
+% 		\end{equation*}
+% 	\end{frame}  
 
-	\begin{frame}{Tracking for general objects}
-	\begin{equation*}
-		\begin{aligned}
-	\mathcal{L}_{\text{c},i}(\widetilde{y};R) 
-	&=\int_0^1 \mathcal{N}(A_i\alpha+B_i;0,R)\text{ d}\alpha\\
-	\pause
-	&=\int_0^1 
-	\color{yellow}{\frac{\mathcal{N}(B_i;0,R)}{\mathcal{N}\left(\frac{B_i'R^{-1}A_i}{A_i R^{-1}A_i};0,1\right)}} 
-	\color{white}{\frac{\mathcal{N}\left(\alpha;\color{green}{-\frac{B_i'R^{-1}A_i}{A_i'R^{-1}A_i}},\color{orange}{\frac{1}{A_i'R^{-1}A_i}}\color{white}{}\right)}{\color{yellow}{\sqrt{A_i'R^{-1}A_i}}}\text{ d}\alpha}
-	\qquad \text{(square compl.)}\\
-	\pause
-	&=\color{yellow}{C_i(\widetilde{y}; R)}\,\color{white}{\int_0^1 \mathcal{N}\left(\alpha;\color{green}{\mu_i(\widetilde{y};R)}\color{white}{,}\,\,\color{orange}{\sigma_i^2(\widetilde{y};R)}\color{white}{}\right)\text{ d}\alpha}\\	
-	\pause
-	&=\color{yellow}{C_i(\widetilde{y}; R)}\,
-	\color{white}{\left[\Phi\left(\frac{1-\color{green}{\mu_i(\widetilde{y};R)}}{\color{orange}{\sigma_i(\widetilde{y};R)}}\right)-\Phi\left(-\frac{\color{green}{\mu_i(\widetilde{y};R)}}{\color{orange}{\sigma_i(\widetilde{y};R)}}\right)\right]}
-		\end{aligned}
-	\end{equation*}
-	\vspace{0.1cm}
-	\begin{center}
-	[Tesori et al., 2024]
-	\end{center}
-	\end{frame}
+% 	\begin{frame}{Tracking for general objects}
+% 	\begin{equation*}
+% 		\begin{aligned}
+% 	\mathcal{L}_{\text{c},i}(\widetilde{y};R) 
+% 	&=\int_0^1 \mathcal{N}(A_i\alpha+B_i;0,R)\text{ d}\alpha\\
+% 	\pause
+% 	&=\int_0^1 
+% 	\color{yellow}{\frac{\mathcal{N}(B_i;0,R)}{\mathcal{N}\left(\frac{B_i'R^{-1}A_i}{A_i R^{-1}A_i};0,1\right)}} 
+% 	\color{white}{\frac{\mathcal{N}\left(\alpha;\color{green}{-\frac{B_i'R^{-1}A_i}{A_i'R^{-1}A_i}},\color{orange}{\frac{1}{A_i'R^{-1}A_i}}\color{white}{}\right)}{\color{yellow}{\sqrt{A_i'R^{-1}A_i}}}\text{ d}\alpha}
+% 	\qquad \text{(square compl.)}\\
+% 	\pause
+% 	&=\color{yellow}{C_i(\widetilde{y}; R)}\,\color{white}{\int_0^1 \mathcal{N}\left(\alpha;\color{green}{\mu_i(\widetilde{y};R)}\color{white}{,}\,\,\color{orange}{\sigma_i^2(\widetilde{y};R)}\color{white}{}\right)\text{ d}\alpha}\\	
+% 	\pause
+% 	&=\color{yellow}{C_i(\widetilde{y}; R)}\,
+% 	\color{white}{\left[\Phi\left(\frac{1-\color{green}{\mu_i(\widetilde{y};R)}}{\color{orange}{\sigma_i(\widetilde{y};R)}}\right)-\Phi\left(-\frac{\color{green}{\mu_i(\widetilde{y};R)}}{\color{orange}{\sigma_i(\widetilde{y};R)}}\right)\right]}
+% 		\end{aligned}
+% 	\end{equation*}
+% 	\vspace{0.1cm}
+% 	\begin{center}
+% 	[Tesori et al., 2024]
+% 	\end{center}
+% 	\end{frame}
 
-\begin{frame}{Simulation}
-	\begin{center}
-		\includegraphics[width=1\textwidth]{Inkscape/groundTruth.pdf}
-	\end{center}
-\end{frame}
+% \begin{frame}{Simulation}
+% 	\begin{center}
+% 		\includegraphics[width=1\textwidth]{Inkscape/groundTruth.pdf}
+% 	\end{center}
+% \end{frame}
 
-\begin{frame}{Simulation}
-	\begin{center}
-		\includegraphics[width=1\textwidth]{Inkscape/shapeBelief.pdf}
-	\end{center}
-\end{frame}
+% \begin{frame}{Simulation}
+% 	\begin{center}
+% 		\includegraphics[width=1\textwidth]{Inkscape/shapeBelief.pdf}
+% 	\end{center}
+% \end{frame}
 
-\begin{frame}{Simulation}
-	\vspace{1cm}
-	\begin{center}
-		\href{https://www.youtube.com/embed/WSCnlCPs1Oo?autoplay=0&start=0}{\includegraphics[width=0.15\textwidth]{Inkscape/video.pdf}}
-	\end{center}
-\end{frame}
+% \begin{frame}{Simulation}
+% 	\vspace{1cm}
+% 	\begin{center}
+% 		\href{https://www.youtube.com/embed/WSCnlCPs1Oo?autoplay=0&start=0}{\includegraphics[width=0.15\textwidth]{Inkscape/video.pdf}}
+% 	\end{center}
+% \end{frame}
 
 \section[Conclusions]{Conclusions}
 

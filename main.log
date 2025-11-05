@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.1.19)  2 NOV 2025 20:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.1.19)  3 NOV 2025 21:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1336,10 +1336,10 @@ Overfull \vbox (16.29332pt too high) detected at line 425
 <figures/Inkscape/classification.pdf, id=333, 1446.40375pt x 813.0375pt>
 File: figures/Inkscape/classification.pdf Graphic file (type pdf)
 <use figures/Inkscape/classification.pdf>
-Package pdftex.def Info: figures/Inkscape/classification.pdf  used on input line 487.
+Package pdftex.def Info: figures/Inkscape/classification.pdf  used on input line 488.
 (pdftex.def)             Requested size: 398.3386pt x 223.90236pt.
 
-Overfull \vbox (27.48347pt too high) detected at line 487
+Overfull \vbox (27.48347pt too high) detected at line 488
  []
 
 
@@ -1355,7 +1355,7 @@ Overfull \vbox (27.48347pt too high) detected at line 487
 [51
 
 ]
-Overfull \vbox (8.94463pt too high) detected at line 529
+Overfull \vbox (8.94463pt too high) detected at line 530
  []
 
 
@@ -1363,7 +1363,7 @@ Overfull \vbox (8.94463pt too high) detected at line 529
 [52
 
 ]
-Overfull \vbox (8.94463pt too high) detected at line 529
+Overfull \vbox (8.94463pt too high) detected at line 530
  []
 
 
@@ -1374,10 +1374,10 @@ Overfull \vbox (8.94463pt too high) detected at line 529
 <figures/Inkscape/T2S.pdf, id=364, 1446.40375pt x 813.0375pt>
 File: figures/Inkscape/T2S.pdf Graphic file (type pdf)
 <use figures/Inkscape/T2S.pdf>
-Package pdftex.def Info: figures/Inkscape/T2S.pdf  used on input line 535.
+Package pdftex.def Info: figures/Inkscape/T2S.pdf  used on input line 536.
 (pdftex.def)             Requested size: 398.3386pt x 223.90236pt.
 
-Overfull \vbox (27.48347pt too high) detected at line 535
+Overfull \vbox (27.48347pt too high) detected at line 536
  []
 
 
@@ -1385,7 +1385,7 @@ Overfull \vbox (27.48347pt too high) detected at line 535
 [54
 
  <./figures/Inkscape/T2S.pdf>]
-Overfull \vbox (2.7109pt too high) detected at line 557
+Overfull \vbox (2.7109pt too high) detected at line 558
  []
 
 
@@ -1393,7 +1393,7 @@ Overfull \vbox (2.7109pt too high) detected at line 557
 [55
 
 ]
-Overfull \vbox (2.7109pt too high) detected at line 557
+Overfull \vbox (2.7109pt too high) detected at line 558
  []
 
 
@@ -1401,7 +1401,7 @@ Overfull \vbox (2.7109pt too high) detected at line 557
 [56
 
 ]
-Overfull \vbox (2.7109pt too high) detected at line 557
+Overfull \vbox (2.7109pt too high) detected at line 558
  []
 
 
@@ -1409,7 +1409,7 @@ Overfull \vbox (2.7109pt too high) detected at line 557
 [57
 
 ]
-Overfull \vbox (2.7109pt too high) detected at line 557
+Overfull \vbox (2.7109pt too high) detected at line 558
  []
 
 
@@ -1420,10 +1420,10 @@ Overfull \vbox (2.7109pt too high) detected at line 557
 <figures/Inkscape/LSM.pdf, id=393, 1446.40375pt x 813.0375pt>
 File: figures/Inkscape/LSM.pdf Graphic file (type pdf)
 <use figures/Inkscape/LSM.pdf>
-Package pdftex.def Info: figures/Inkscape/LSM.pdf  used on input line 563.
+Package pdftex.def Info: figures/Inkscape/LSM.pdf  used on input line 564.
 (pdftex.def)             Requested size: 398.3386pt x 223.90236pt.
 
-Overfull \vbox (27.48347pt too high) detected at line 563
+Overfull \vbox (27.48347pt too high) detected at line 564
  []
 
 
@@ -1431,7 +1431,7 @@ Overfull \vbox (27.48347pt too high) detected at line 563
 [59
 
  <./figures/Inkscape/LSM.pdf>]
-Overfull \vbox (16.8035pt too high) detected at line 584
+Overfull \vbox (16.8035pt too high) detected at line 585
  []
 
 
@@ -1439,7 +1439,7 @@ Overfull \vbox (16.8035pt too high) detected at line 584
 [60
 
 ]
-Overfull \vbox (16.8035pt too high) detected at line 584
+Overfull \vbox (16.8035pt too high) detected at line 585
  []
 
 
@@ -1447,7 +1447,7 @@ Overfull \vbox (16.8035pt too high) detected at line 584
 [61
 
 ]
-Overfull \vbox (16.8035pt too high) detected at line 584
+Overfull \vbox (16.8035pt too high) detected at line 585
  []
 
 
@@ -1458,10 +1458,10 @@ Overfull \vbox (16.8035pt too high) detected at line 584
 <figures/Inkscape/shaper.pdf, id=417, 1446.40375pt x 813.0375pt>
 File: figures/Inkscape/shaper.pdf Graphic file (type pdf)
 <use figures/Inkscape/shaper.pdf>
-Package pdftex.def Info: figures/Inkscape/shaper.pdf  used on input line 590.
+Package pdftex.def Info: figures/Inkscape/shaper.pdf  used on input line 591.
 (pdftex.def)             Requested size: 398.3386pt x 223.90236pt.
 
-Overfull \vbox (27.48347pt too high) detected at line 590
+Overfull \vbox (27.48347pt too high) detected at line 591
  []
 
 
@@ -1469,14 +1469,26 @@ Overfull \vbox (27.48347pt too high) detected at line 590
 [63
 
  <./figures/Inkscape/shaper.pdf>]
+Overfull \vbox (9.13824pt too high) detected at line 621
+ []
+
+
 
 [64
 
 ]
+Overfull \vbox (9.13824pt too high) detected at line 621
+ []
+
+
 
 [65
 
 ]
+Overfull \vbox (9.13824pt too high) detected at line 621
+ []
+
+
 
 [66
 
@@ -1485,7 +1497,7 @@ Overfull \vbox (27.48347pt too high) detected at line 590
 [67
 
 ]
-Overfull \vbox (0.15309pt too high) detected at line 647
+Overfull \vbox (13.69337pt too high) detected at line 658
  []
 
 
@@ -1493,7 +1505,7 @@ Overfull \vbox (0.15309pt too high) detected at line 647
 [68
 
 ]
-Overfull \vbox (15.04515pt too high) detected at line 703
+Overfull \vbox (8.96182pt too high) detected at line 713
  []
 
 
@@ -1501,90 +1513,51 @@ Overfull \vbox (15.04515pt too high) detected at line 703
 [69
 
 ]
-Overfull \vbox (15.04515pt too high) detected at line 703
- []
-
-
 
 [70
 
 ]
-LaTeX Font Info:    Trying to load font information for U+dsrom on input line 730.
- (C:\Users\Matteo\AppData\Local\Programs\MiKTeX\tex/latex/doublestroke\udsrom.fd
-File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
-)
-Overfull \vbox (19.41283pt too high) detected at line 730
- []
-
-
 
 [71
 
 ]
-Overfull \vbox (19.41283pt too high) detected at line 730
- []
-
-
 
 [72
 
 ]
-Overfull \vbox (19.41283pt too high) detected at line 730
- []
-
-
 
 [73
 
 ]
-<figures/Inkscape/surfaceDecomp.pdf, id=479, 555.07375pt x 604.2575pt>
-File: figures/Inkscape/surfaceDecomp.pdf Graphic file (type pdf)
-<use figures/Inkscape/surfaceDecomp.pdf>
-Package pdftex.def Info: figures/Inkscape/surfaceDecomp.pdf  used on input line 765.
-(pdftex.def)             Requested size: 161.32492pt x 175.61743pt.
+Overfull \vbox (13.99077pt too high) detected at line 777
+ []
+
 
 
 [74
 
- <./figures/Inkscape/surfaceDecomp.pdf>]
-File: figures/Inkscape/surfaceDecomp.pdf Graphic file (type pdf)
-<use figures/Inkscape/surfaceDecomp.pdf>
-Package pdftex.def Info: figures/Inkscape/surfaceDecomp.pdf  used on input line 765.
-(pdftex.def)             Requested size: 161.32492pt x 175.61743pt.
+]
+Overfull \vbox (13.99077pt too high) detected at line 777
+ []
+
 
 
 [75
 
 ]
-File: figures/Inkscape/surfaceDecomp.pdf Graphic file (type pdf)
-<use figures/Inkscape/surfaceDecomp.pdf>
-Package pdftex.def Info: figures/Inkscape/surfaceDecomp.pdf  used on input line 765.
-(pdftex.def)             Requested size: 161.32492pt x 175.61743pt.
-
 
 [76
 
 ]
-<figures/Inkscape/surfaceMap.pdf, id=503, 1160.335pt x 467.7475pt>
-File: figures/Inkscape/surfaceMap.pdf Graphic file (type pdf)
-<use figures/Inkscape/surfaceMap.pdf>
-Package pdftex.def Info: figures/Inkscape/surfaceMap.pdf  used on input line 783.
-(pdftex.def)             Requested size: 318.67209pt x 128.46323pt.
-
-Overfull \vbox (24.91795pt too high) detected at line 783
+Overfull \vbox (2.70354pt too high) detected at line 798
  []
 
 
 
 [77
 
- <./figures/Inkscape/surfaceMap.pdf>]
-File: figures/Inkscape/surfaceMap.pdf Graphic file (type pdf)
-<use figures/Inkscape/surfaceMap.pdf>
-Package pdftex.def Info: figures/Inkscape/surfaceMap.pdf  used on input line 783.
-(pdftex.def)             Requested size: 318.67209pt x 128.46323pt.
-
-Overfull \vbox (24.91795pt too high) detected at line 783
+]
+Overfull \vbox (2.70354pt too high) detected at line 798
  []
 
 
@@ -1592,222 +1565,69 @@ Overfull \vbox (24.91795pt too high) detected at line 783
 [78
 
 ]
-Overfull \vbox (22.84354pt too high) detected at line 812
- []
-
-
 
 [79
 
 ]
-Overfull \vbox (22.84354pt too high) detected at line 812
- []
-
-
 
 [80
 
 ]
-Overfull \vbox (22.84354pt too high) detected at line 812
- []
-
-
 
 [81
 
 ]
-<figures/Inkscape/contourDecomp.pdf, id=586, 557.08125pt x 603.25375pt>
-File: figures/Inkscape/contourDecomp.pdf Graphic file (type pdf)
-<use figures/Inkscape/contourDecomp.pdf>
-Package pdftex.def Info: figures/Inkscape/contourDecomp.pdf  used on input line 837.
-(pdftex.def)             Requested size: 161.32492pt x 174.69057pt.
-
 
 [82
 
- <./figures/Inkscape/contourDecomp.pdf>]
-File: figures/Inkscape/contourDecomp.pdf Graphic file (type pdf)
-<use figures/Inkscape/contourDecomp.pdf>
-Package pdftex.def Info: figures/Inkscape/contourDecomp.pdf  used on input line 837.
-(pdftex.def)             Requested size: 161.32492pt x 174.69057pt.
-
+]
 
 [83
 
 ]
-File: figures/Inkscape/contourDecomp.pdf Graphic file (type pdf)
-<use figures/Inkscape/contourDecomp.pdf>
-Package pdftex.def Info: figures/Inkscape/contourDecomp.pdf  used on input line 837.
-(pdftex.def)             Requested size: 161.32492pt x 174.69057pt.
-
 
 [84
 
 ]
-<figures/Inkscape/contourMap.pdf, id=604, 920.43875pt x 429.605pt>
-File: figures/Inkscape/contourMap.pdf Graphic file (type pdf)
-<use figures/Inkscape/contourMap.pdf>
-Package pdftex.def Info: figures/Inkscape/contourMap.pdf  used on input line 853.
-(pdftex.def)             Requested size: 258.91765pt x 120.84576pt.
-
-Overfull \vbox (14.80869pt too high) detected at line 853
- []
-
-
 
 [85
 
- <./figures/Inkscape/contourMap.pdf>]
-File: figures/Inkscape/contourMap.pdf Graphic file (type pdf)
-<use figures/Inkscape/contourMap.pdf>
-Package pdftex.def Info: figures/Inkscape/contourMap.pdf  used on input line 853.
-(pdftex.def)             Requested size: 258.91765pt x 120.84576pt.
-
-Overfull \vbox (14.80869pt too high) detected at line 853
- []
-
-
+]
 
 [86
 
 ]
-Overfull \hbox (3.77032pt too wide) detected at line 876
-[][]
- []
-
-
 
 [87
 
 ]
-Overfull \hbox (3.77032pt too wide) detected at line 876
-[][]
- []
-
-
 
 [88
 
 ]
-Overfull \hbox (3.77032pt too wide) detected at line 876
-[][]
- []
-
-
 
 [89
 
 ]
-Overfull \hbox (3.77032pt too wide) detected at line 876
-[][]
- []
-
-
 
 [90
 
 ]
-<figures/Inkscape/groundTruth.pdf, id=681, 1446.40375pt x 813.0375pt>
-File: figures/Inkscape/groundTruth.pdf Graphic file (type pdf)
-<use figures/Inkscape/groundTruth.pdf>
-Package pdftex.def Info: figures/Inkscape/groundTruth.pdf  used on input line 882.
-(pdftex.def)             Requested size: 398.3386pt x 223.90236pt.
-
-Overfull \vbox (27.48347pt too high) detected at line 882
- []
-
-
 
 [91
 
- <./figures/Inkscape/groundTruth.pdf>]
-<figures/Inkscape/shapeBelief.pdf, id=732, 1446.40375pt x 813.0375pt>
-File: figures/Inkscape/shapeBelief.pdf Graphic file (type pdf)
-<use figures/Inkscape/shapeBelief.pdf>
-Package pdftex.def Info: figures/Inkscape/shapeBelief.pdf  used on input line 888.
-(pdftex.def)             Requested size: 398.3386pt x 223.90236pt.
-
-Overfull \vbox (27.48347pt too high) detected at line 888
- []
-
-
+]
 
 [92
 
- <./figures/Inkscape/shapeBelief.pdf>]
-<figures/Inkscape/video.pdf, id=790, 187.70125pt x 189.70876pt>
-File: figures/Inkscape/video.pdf Graphic file (type pdf)
-<use figures/Inkscape/video.pdf>
-Package pdftex.def Info: figures/Inkscape/video.pdf  used on input line 895.
-(pdftex.def)             Requested size: 59.74835pt x 60.38672pt.
-
-
-[93
-
- <./figures/Inkscape/video.pdf>]
-
-[94
-
 ]
 
-[95
-
-]
-
-[96
-
-]
-
-[97
-
-]
-
-[98
-
-]
-
-[99
-
-]
-
-[100
-
-]
-
-[101
-
-]
-
-[102
-
-]
-
-[103
-
-]
-
-[104
-
-]
-
-[105
-
-]
-
-[106
-
-]
-
-[107
-
-]
-
-<figures/Inkscape/thanks2.pdf, id=871, 1446.40375pt x 813.0375pt>
+<figures/Inkscape/thanks2.pdf, id=578, 1446.40375pt x 813.0375pt>
 File: figures/Inkscape/thanks2.pdf Graphic file (type pdf)
 <use figures/Inkscape/thanks2.pdf>
-Package pdftex.def Info: figures/Inkscape/thanks2.pdf  used on input line 949.
+Package pdftex.def Info: figures/Inkscape/thanks2.pdf  used on input line 1045.
 (pdftex.def)             Requested size: 455.24408pt x 255.89726pt.
-[108
+[93
 
  <./figures/Inkscape/thanks2.pdf>]
 \tf@nav=\write6
@@ -1828,17 +1648,17 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: F993E3BA9A562334B67FC96D15B08807;812.
  ) 
 Here is how much of TeX's memory you used:
- 39159 strings out of 473536
- 837564 string characters out of 5714472
+ 39024 strings out of 473536
+ 834015 string characters out of 5714472
  1312317 words of memory out of 5000000
- 61507 multiletter control sequences out of 15000+600000
- 577503 words of font info for 108 fonts, out of 8000000 for 9000
+ 61407 multiletter control sequences out of 15000+600000
+ 574707 words of font info for 93 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,16n,123p,1953b,943s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssi10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/doublestroke/dsrom10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam7.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfss1095.pfb>
-Output written on main.pdf (108 pages, 1684797 bytes).
+ 128i,19n,123p,1953b,943s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssi10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfss1095.pfb>
+Output written on main.pdf (93 pages, 1425578 bytes).
 PDF statistics:
- 1140 PDF objects out of 1200 (max. 8388607)
- 222 named destinations out of 1000 (max. 500000)
- 183 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 811 PDF objects out of 1000 (max. 8388607)
+ 192 named destinations out of 1000 (max. 500000)
+ 148 words of extra memory for PDF output out of 10000 (max. 10000000)
 
