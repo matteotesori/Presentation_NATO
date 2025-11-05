@@ -785,7 +785,7 @@ T2S is \textbf{linear} in the shape complexity $n^{(c)}$:
 \begin{equation*}
 \mathcal{L}\left(\widetilde{\mathcal{Y}}\,\big|\,\widetilde{S}^{(c)}\right)=
 \underbrace{\underbrace{\textrm{Poisson}\left(|\widetilde{\mathcal{Y}}|;\,\lambda^{(c)}\right)}_{\mathcal{O}(1)}\,
-\prod_{j=1}^m \sum_{i=1}^{n^{(c)}} \frac{\mu_i^{(c)}}{\mu^{(c)}} \underbrace{\int_{[0,1]^d} p_v\left(\widetilde{y}^{(j)}-\widetilde{\kappa}_i^{(c)}(\beta)\right)\text{ d}\beta}_{\mathcal{O}(N_i^{(c)})}}_{\mathcal{O}(m n^{(c)} \bar{N}^{(c)})}
+\prod_{j=1}^m \sum_{i=1}^{n^{(c)}} \frac{\mu_i^{(c)}}{\mu^{(c)}} \underbrace{\int_{[0,1]^d} \pi_v\left(\widetilde{y}^{(j)}-\widetilde{\kappa}_i^{(c)}(\beta)\right)\text{ d}\beta}_{\mathcal{O}(N_i^{(c)})}}_{\mathcal{O}(m n^{(c)} \bar{N}^{(c)})}
 \end{equation*}
 \pause
 The overall complexity is $\mathcal{O}(C m \bar{n} \bar{N})$:

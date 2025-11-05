@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1762201823.28389 "c:/Users/Matteo/Desktop/NATO/Presentation/main.tex" "main.pdf" "main" 1762201827.68523 0
+["pdflatex"] 1762324273.91609 "c:/Users/Matteo/Desktop/NATO/Presentation/main.tex" "main.pdf" "main" 1762324288.16428 0
   "C:/Users/Matteo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1759258766 280355 659058c8e649fa11d9744f361af892bb ""
   "C:/Users/Matteo/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1737308044 12013877 2bcb06489b8383678010d4c2074bcbbd ""
   "C:/Users/Matteo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1001775420 2900 1537cc8184ad1792082cd229ecc269f4 ""
@@ -281,7 +281,7 @@
   "C:/Users/Matteo/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/Matteo/AppData/Local/Programs/MiKTeX/tex/latex/zref/zref-abspage.sty" 1695383086 2269 4fe6fb3396214c91f164d45faf9bec45 ""
   "C:/Users/Matteo/AppData/Local/Programs/MiKTeX/tex/latex/zref/zref-base.sty" 1695383086 20785 f7d1133a287929598a897c93f8f4c44b ""
-  "c:/Users/Matteo/Desktop/NATO/Presentation/main.tex" 1762201822 38185 1c55fb61acb11e2faa2fd280e1065b80 ""
+  "c:/Users/Matteo/Desktop/NATO/Presentation/main.tex" 1762324270 38187 a4fb9b9ed269be3695259197a1acfb0c ""
   "figures/Inkscape/LOMEM.pdf" 1762115541 26885 7405c56c90357f0777632c8ba5e0da78 ""
   "figures/Inkscape/LOpredictor.pdf" 1762005360 18979 c283a3f2c30c28b6498a8489d581e538 ""
   "figures/Inkscape/LSM.pdf" 1762102969 61333 a8ed858365c71dd1d63f31dcb6e0fa98 ""
@@ -295,10 +295,10 @@
   "figures/Inkscape/potvseot.pdf" 1761990348 89811 7d2055fce3ebb2e445528c67ca62fe74 ""
   "figures/Inkscape/shaper.pdf" 1762109505 32798 0e98cb91d710ea5652683cec532be978 ""
   "figures/Inkscape/thanks2.pdf" 1745743933 287936 d22bd38e8a97b279fbde2befbb6b93f6 ""
-  "main.aux" 1762201827 8528 c3c27c22dace128a897b28c43d794c86 "pdflatex"
-  "main.nav" 1762201827 5709 0c6a9c00cf4a998b0efaeb7ee8296820 "pdflatex"
-  "main.out" 1762201827 812 f993e3ba9a562334b67fc96d15b08807 "pdflatex"
-  "main.tex" 1762201822 38185 1c55fb61acb11e2faa2fd280e1065b80 ""
+  "main.aux" 1762324287 8528 c3c27c22dace128a897b28c43d794c86 "pdflatex"
+  "main.nav" 1762324287 5709 0c6a9c00cf4a998b0efaeb7ee8296820 "pdflatex"
+  "main.out" 1762324287 812 f993e3ba9a562334b67fc96d15b08807 "pdflatex"
+  "main.tex" 1762324270 38187 a4fb9b9ed269be3695259197a1acfb0c ""
   (generated)
   "main.aux"
   "main.log"
